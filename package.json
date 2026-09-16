@@ -11,11 +11,15 @@
     "check": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "bundle": "tsx scripts/bundle.ts"
+    "bundle": "tsx scripts/bundle.ts",
+    "lint:commits": "commitlint --from=origin/main --to=HEAD --verbose"
   },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.22.0",
     "@cloudflare/workers-types": "^5.20260916.1",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "semantic-release": "^24.2.8",
     "tsx": "^4.23.13",
     "typescript": "^5.9.0",
     "vitest": "^3.2.4",
