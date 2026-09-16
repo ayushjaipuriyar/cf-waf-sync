@@ -1,0 +1,29 @@
+name = "cf-waf-sync"
+main = "src/index.ts"
+compatibility_date = "2026-09-16"
+compatibility_flags = ["nodejs_compat"]
+
+[triggers]
+crons = ["0 9,15,18,22 * * *"]
+
+[vars]
+CF_IP_BLOCKLIST_NAME = "sefinek_cf_waf"
+ALLOWLIST = 'http.host eq "media-cdn1.seabuddy.co"' # public CDN exempt for Part 2; set "" to disable
+PHP_SUPPORT = "false"
+WORDPRESS_SUPPORT = "false"
+SNIFFCAT_CONFIDENCE_MIN = "80"
+SNIFFCAT_LIMIT = "2000"
+ABUSEIPDB_CONFIDENCE_MIN = "75"
+ABUSEIPDB_LIMIT = "8000"
+EXCLUDED_ZONES = ""
+# For zone-scoped cfut_... tokens (can't GET /zones), set explicit zone:
+# CF_ZONE_IDS = "0115c6fc4aab62dff1c8c1730b17cea9"
+# CF_ZONE_NAMES = "seabuddy.co"
+
+# Secrets to set via `wrangler secret put`:
+# CF_API_TOKEN (Account API Token, cfat_...  with Zone:WAF:Edit + Account:Filter Lists:Edit)
+# CF_ACCOUNT_ID (32-char hex, dash.cloudflare.com/<id>/...)
+# SNIFFCAT_API_TOKEN (optional)
+# ABUSEIPDB_API_KEY (optional)
+# DISCORD_WEBHOOK_URL (optional)
+# RULES_SOURCE_URL (optional, e.g. https://raw.githubusercontent.com/sefinek/Cloudflare-WAF-Expressions/main/rules/expressions.md)

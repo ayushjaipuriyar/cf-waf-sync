@@ -1,0 +1,376 @@
+export const BUNDLED_EXPRESSIONS = `# ☁️ Firewall Rules for Cloudflare WAF
+1. If **you use PHP**: for requests ending with \`.php\`, the **MANAGED CHALLENGE** event will be triggered.
+    - **Using the script:** set \`PHP_SUPPORT=true\` in the \`.env\` file
+    - **Not using the script:** remove the entire \`wildcard "*.php*"\` line from Part 5
+2. There's no need to manually copy these expressions into Cloudflare or update them. The [script](https://github.com/sefinek/Cloudflare-WAF-Expressions?tab=readme-ov-file#automatic-highly-recommended) automatically and continuously manages these rules.
+3. If you encounter any false positives, report them in the [Issues](https://github.com/sefinek/Cloudflare-WAF-Expressions/issues) section or on my [Discord server](https://discord.gg/RVH8UXgmzs).
+4. If you host an API, use the \`api.\` subdomain (e.g., \`api.example.com\`).
+5. If you use a CDN, use the \`cdn.\` subdomain (e.g., \`cdn.example.com\`).
+6. Got any suggestions or ideas? Feel free to share them. Thanks!
+
+
+## 🔥 Part 1 - Suspicious paths & headers<div id="part1"></div>
+> **Action:** Block
+\`\`\`
+(http.referer eq "binance.com") or
+(http.referer eq "bing.com") or
+(http.referer eq "google.com") or
+(http.referer eq "http://n666888.com") or
+(http.referer eq "https://bing.com") or
+(http.referer eq "https://bing.com/") or
+(http.referer eq "https://google.com") or
+(http.referer eq "https://google.com/") or
+(http.request.uri.path contains "\\\\") or
+(http.request.uri.path eq "/backup") or
+(http.request.uri.path eq "/git") or
+(http.request.uri.path eq "/old") or
+(http.request.uri.path wildcard "*/.*" and not starts_with(http.request.uri.path, "/.well-known/")) or
+(http.request.uri.path wildcard "*//*") or
+(http.request.uri.path wildcard "*/actuator*") or
+(http.request.uri.path wildcard "*/dbadmin*") or
+(http.request.uri.path wildcard "*/etc/passwd*") or
+(http.request.uri.path wildcard "*/etc/shadow*") or
+(http.request.uri.path wildcard "*/login.action*") or
+(http.request.uri.path wildcard "*/phpmyadmin*") or
+(http.request.uri.path wildcard "*/sito*") or
+(http.request.uri.path wildcard "*/user.action*") or
+(http.request.uri.path wildcard "*/webdav*") or
+(http.request.uri.path wildcard "*/~adm*") or
+(http.request.uri.path wildcard "*/~sysadm*") or
+(http.request.uri.path wildcard "*/~webmaster*") or
+(http.request.uri.path wildcard "*appsettings*") or
+(http.request.uri.path wildcard "*authorized_keys*") or
+(http.request.uri.path wildcard "*backup.*") or
+(http.request.uri.path wildcard "*docker-compose*") or
+(http.request.uri.path wildcard "*dockerfile*") or
+(http.request.uri.path wildcard "*dump.*") or
+(http.request.uri.path wildcard "*file_put_contents*") or
+(http.request.uri.path wildcard "*id_rsa*") or
+(http.request.uri.path wildcard "*keys.json*") or
+(http.request.uri.path wildcard "*pboot:if*") or
+(http.request.uri.path wildcard "*server.key*") or
+(http.request.uri.path wildcard "*sftp*") or
+(http.request.uri.path wildcard "*wlwmanifest*") or
+(http.request.uri.path wildcard "*www-sql*") or
+(http.request.uri.path wildcard "*id_ed25519*") or
+(http.request.uri.path wildcard "*_all_dbs*") or
+(http.request.uri.path wildcard "*_debugbar*") or
+(http.request.uri.path wildcard "*~ftp*") or
+(http.request.uri.path wildcard "*~tmp*") or
+(http.request.uri.query wildcard "*.env*") or
+(http.request.uri.query wildcard "*etc/passwd*") or
+(http.user_agent contains "   ") or
+(http.user_agent eq "" and not http.host contains "api." and not starts_with(http.host, "api-") and not http.host contains "cdn." and http.host ne "blocklist.sefinek.net") or
+(http.user_agent eq "Mozilla/5.0 (Windows NT 10.0; Win64; x64)") or
+(http.user_agent eq "Mozilla/5.0") or
+(http.user_agent wildcard "*embeddedbrowser*" and not http.host contains "api." and not starts_with(http.host, "api-") and not http.host contains "cdn." and http.host ne "blocklist.sefinek.net") or
+(http.user_agent wildcard "*go-http-client*" and not http.host contains "api." and not starts_with(http.host, "api-") and not http.host contains "cdn." and http.host ne "blocklist.sefinek.net") or
+(http.user_agent wildcard "*headless*" and not http.host contains "api." and not starts_with(http.host, "api-") and not http.host contains "cdn." and http.host ne "blocklist.sefinek.net") or
+(http.user_agent wildcard "*mozilla/4*") or
+(http.user_agent wildcard "*private_keys*") or
+(http.user_agent wildcard "*windows 11*")
+\`\`\`
+
+## 🧨 Part 2 - Malicious extensions & injections<div id="part2"></div>
+> **Action:** Block
+\`\`\`
+(
+  http.user_agent contains "aiohttp" or
+  http.user_agent contains "aioquic" or
+  http.user_agent contains "curl" or
+  http.user_agent contains "okhttp" or
+  http.user_agent contains "python-requests" or
+  http.user_agent contains "python-httpx" or
+  http.user_agent contains "wget"
+) and not (
+  starts_with(http.host, "api.") or
+  starts_with(http.host, "api-") or
+  starts_with(http.host, "cdn.") or
+  http.host eq "blocklist.sefinek.net"
+) or
+(http.request.uri.path wildcard "*.7z" and not http.host contains "cdn.") or
+(http.request.uri.path wildcard "*.bak") or
+(http.request.uri.path wildcard "*.bz2" and not http.host contains "cdn.") or
+(http.request.uri.path wildcard "*.gz" and not http.host contains "cdn.") or
+(http.request.uri.path wildcard "*.key") or
+(http.request.uri.path wildcard "*.log" and not http.host contains "cdn." and http.host ne "blocklist.sefinek.net") or
+(http.request.uri.path wildcard "*.old") or
+(http.request.uri.path wildcard "*.orig") or
+(http.request.uri.path wildcard "*.pem") or
+(http.request.uri.path wildcard "*.py") or
+(http.request.uri.path wildcard "*.sh" and not http.host contains "cdn.") or
+(http.request.uri.path wildcard "*.sql") or
+(http.request.uri.path wildcard "*.swp") or
+(http.request.uri.path wildcard "*.tar" and not http.host contains "cdn.") or
+(http.request.uri.path wildcard "*.tgz" and not http.host contains "cdn.") or
+(http.request.uri.path wildcard "*.xz" and not http.host contains "cdn.") or
+(http.request.uri.path wildcard "*.yaml" and not http.host contains "cdn.") or
+(http.request.uri.path wildcard "*.yml" and not http.host contains "cdn.") or
+(http.request.uri.path wildcard "*/.env*") or
+(http.request.uri.path wildcard "*auth.json*") or
+(http.request.uri.path wildcard "*conf.*") or
+(http.request.uri.path wildcard "*crlfinjection*") or
+(http.request.uri.path wildcard "*curl%20*") or
+(http.request.uri.path wildcard "*curl+*") or
+(http.request.uri.path wildcard "*env.js*") or
+(http.request.uri.path wildcard "*fancyupload*") or
+(http.request.uri.path wildcard "*id_dsa*") or
+(http.request.uri.path wildcard "*id_ecdsa*") or
+(http.request.uri.path wildcard "*key.json*") or
+(http.request.uri.path wildcard "*php.ini*") or
+(http.request.uri.path wildcard "*phpinfo*") or
+(http.request.uri.path wildcard "*phpsysinfo*") or
+(http.request.uri.path wildcard "*settings.local*") or
+(http.request.uri.path wildcard "*settings.prod*") or
+(http.request.uri.path wildcard "*wget%20*") or
+(http.request.uri.path wildcard "*wget+*") or
+(lower(raw.http.request.uri.query) contains "%00") or
+(lower(raw.http.request.uri.query) contains "%0a") or
+(lower(raw.http.request.uri.query) contains "%0d") or
+(lower(raw.http.request.uri.query) contains "%2e%2e") or
+(lower(raw.http.request.uri.query) contains "..%2f") or
+(lower(raw.http.request.uri.query) contains "..%5c") or
+(http.request.uri.query contains "../") or
+(http.request.uri.query contains "..\\\\") or
+(http.request.uri.query contains "squelette=../") or
+(http.request.uri.query wildcard "*auto_prepend_file*") or
+(http.request.uri.query wildcard "*crlfinjection*") or
+(http.request.uri.query wildcard "*curl%20*") or
+(http.request.uri.query wildcard "*curl+*") or
+(http.request.uri.query wildcard "*ed25519*") or
+(http.request.uri.query wildcard "*file://*") or
+(http.request.uri.query wildcard "*formfinder*") or
+(http.request.uri.query wildcard "*php://*") or
+(http.request.uri.query wildcard "*secrets.json*") or
+(http.request.uri.query wildcard "*set-cookie:*") or
+(http.request.uri.query wildcard "*wget%20*") or
+(http.request.uri.query wildcard "*wget+*") or
+(http.user_agent wildcard "*alittle client*") or
+(http.user_agent wildcard "*\\"*")
+\`\`\`
+
+## 🤖 Part 3 - Unwanted bots<div id="part3"></div>
+> **Action:** Block
+\`\`\`
+(cf.verified_bot_category in {"Archiver"}) or
+(http.user_agent wildcard "*2ip*") or
+(http.user_agent wildcard "*awariobot*") or
+(http.user_agent wildcard "*barkrowler*") or
+(http.user_agent wildcard "*blexbot*") or
+(http.user_agent wildcard "*bomborabot*") or
+(http.user_agent wildcard "*br-crawler*") or
+(http.user_agent wildcard "*brightbot*") or
+(http.user_agent wildcard "*buck*") or
+(http.user_agent wildcard "*bvbot*") or
+(http.user_agent wildcard "*bytespider*") or
+(http.user_agent wildcard "*ccbot*") or
+(http.user_agent wildcard "*checkhost*") or
+(http.user_agent wildcard "*cincraw*") or
+(http.user_agent wildcard "*clickagy*") or
+(http.user_agent wildcard "*cocolyzebot*") or
+(http.user_agent wildcard "*criteobot*") or
+(http.user_agent wildcard "*df bot 1.0*") or
+(http.user_agent wildcard "*domainstatsbot*") or
+(http.user_agent wildcard "*domcopbot*") or
+(http.user_agent wildcard "*dotbot*") or
+(http.user_agent wildcard "*globalping*") or
+(http.user_agent wildcard "*gulperbot*") or
+(http.user_agent wildcard "*httrack*") or
+(http.user_agent wildcard "*iboubot*") or
+(http.user_agent wildcard "*intelx.io*") or
+(http.user_agent wildcard "*internet-structure*") or
+(http.user_agent wildcard "*internetmeasurement*") or
+(http.user_agent wildcard "*ioncrawl*") or
+(http.user_agent wildcard "*keys-so-bot*") or
+(http.user_agent wildcard "*magpie-crawler*") or
+(http.user_agent wildcard "*masscan*") or
+(http.user_agent wildcard "*megaindex*") or
+(http.user_agent wildcard "*mj12bot*") or
+(http.user_agent wildcard "*moe-downloader*") or
+(http.user_agent wildcard "*nimbostratus*") or
+(http.user_agent wildcard "*omgili*") or
+(http.user_agent wildcard "*onalyticabot*") or
+(http.user_agent wildcard "*padicat*") or
+(http.user_agent wildcard "*palo alto networks company*") or
+(http.user_agent wildcard "*panscient.com*") or
+(http.user_agent wildcard "*peer39_crawler*") or
+(http.user_agent wildcard "*proximic*") or
+(http.user_agent wildcard "*riddler*") or
+(http.user_agent wildcard "*rogerbot*") or
+(http.user_agent wildcard "*sbl-bot*") or
+(http.user_agent wildcard "*scrapy*") or
+(http.user_agent wildcard "*semantic-visions*") or
+(http.user_agent wildcard "*semanticbot*") or
+(http.user_agent wildcard "*serpstatbot*") or
+(http.user_agent wildcard "*shapbot*") or
+(http.user_agent wildcard "*sleepbot*") or
+(http.user_agent wildcard "*sqlmap*") or
+(http.user_agent wildcard "*thinkbot*") or
+(http.user_agent wildcard "*tlm-audit-scanner*") or
+(http.user_agent wildcard "*trendictionbot*") or
+(http.user_agent wildcard "*ttd-content*") or
+(http.user_agent wildcard "*voluumdsp*") or
+(http.user_agent wildcard "*wc-test-dev-bot*") or
+(http.user_agent wildcard "*webtechbot*") or
+(http.user_agent wildcard "*whatcms*") or
+(http.user_agent wildcard "*zgrab*")
+\`\`\`
+
+## 🦕 Part 4 - Ancient browsers & IP blocklist<div id="part4"></div>
+> **Action:** Block
+\`\`\`
+(http.user_agent wildcard "*android 8*") or
+(http.user_agent wildcard "*chrome/17*") or
+(http.user_agent wildcard "*chrome/30*") or
+(http.user_agent wildcard "*chrome/31*") or
+(http.user_agent wildcard "*chrome/32*") or
+(http.user_agent wildcard "*chrome/33*") or
+(http.user_agent wildcard "*chrome/34*") or
+(http.user_agent wildcard "*chrome/35*") or
+(http.user_agent wildcard "*chrome/36*") or
+(http.user_agent wildcard "*chrome/37*") or
+(http.user_agent wildcard "*chrome/38*") or
+(http.user_agent wildcard "*chrome/39*") or
+(http.user_agent wildcard "*chrome/41*") or
+(http.user_agent wildcard "*chrome/42*") or
+(http.user_agent wildcard "*chrome/44*") or
+(http.user_agent wildcard "*chrome/48*") or
+(http.user_agent wildcard "*chrome/49*") or
+(http.user_agent wildcard "*chrome/52*") or
+(http.user_agent wildcard "*chrome/53*") or
+(http.user_agent wildcard "*chrome/58*") or
+(http.user_agent wildcard "*chrome/59*") or
+(http.user_agent wildcard "*chrome/60*") or
+(http.user_agent wildcard "*chrome/61*") or
+(http.user_agent wildcard "*chrome/62*") or
+(http.user_agent wildcard "*chrome/64*") or
+(http.user_agent wildcard "*chrome/65*") or
+(http.user_agent wildcard "*chrome/67*") or
+(http.user_agent wildcard "*chrome/68*") or
+(http.user_agent wildcard "*chrome/69*") or
+(http.user_agent wildcard "*chrome/71*") or
+(http.user_agent wildcard "*firefox/10*") or
+(http.user_agent wildcard "*firefox/45*") or
+(http.user_agent wildcard "*firefox/52*") or
+(http.user_agent wildcard "*firefox/57*") or
+(http.user_agent wildcard "*html5plus*") or
+(http.user_agent wildcard "*msie*") or
+(http.user_agent wildcard "*netfront*") or
+(http.user_agent wildcard "*symbianos*") or
+(http.user_agent wildcard "*trident/*") or
+(ip.src.continent eq "T1" and http.host ne "blocklist.sefinek.net") or
+(ip.geoip.asnum in {10630 46851}) or
+(ip.src in $sefinek_cf_waf)
+\`\`\`
+
+## 🗑️ Part 5 - Deprecated browsers & CMS<div id="part5"></div>
+> **Action:** Managed Challenge
+\`\`\`
+(cf.waf.credential_check.password_leaked) or
+(http.referer contains "http://" and not http.referer contains "localhost" and not http.referer contains "127.0.0.1" and not cf.client.bot) or
+(http.request.uri.path wildcard "*.php*" and not cf.client.bot) or
+(http.request.uri.path wildcard "*/wp-admin*") or
+(http.request.uri.path wildcard "*/wp-content*" and not cf.client.bot) or
+(http.request.uri.path wildcard "*/wp-includes*" and not cf.client.bot) or
+(http.user_agent contains "Windows NT 5" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/101*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/103*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/104*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/112*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/113*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/114*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/118*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/119*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/120*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/73*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/74*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/77*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/78*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/79*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/80*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/81*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/83*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/84*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/85*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/86*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/87*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/88*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/89*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/91*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/92*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/93*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/94*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/95*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/96*" and not cf.client.bot) or
+(http.user_agent wildcard "*chrome/97*" and not cf.client.bot) or
+(http.user_agent wildcard "*crios/121*" and not cf.client.bot) or
+(http.user_agent wildcard "*firefox/114*" and not cf.client.bot) or
+(http.user_agent wildcard "*firefox/118*" and not cf.client.bot) or
+(http.user_agent wildcard "*firefox/62*" and not cf.client.bot) or
+(http.user_agent wildcard "*firefox/76*" and not cf.client.bot) or
+(http.user_agent wildcard "*firefox/77*" and not cf.client.bot) or
+(http.user_agent wildcard "*firefox/79*" and not cf.client.bot) or
+(http.user_agent wildcard "*firefox/83*" and not cf.client.bot) or
+(http.user_agent wildcard "*firefox/84*" and not cf.client.bot)
+\`\`\`
+
+<div align="right">
+    <h4>📥 » Last update: 10.09.2026 (DD.MM.YYYY)</h4>
+</div>
+`;
+export const BUNDLED_IP_BLOCKLIST = `# DO NOT EDIT THIS FILE MANUALLY - it is managed by the project and may be
+# overwritten on the next \`git pull\`. To add your own IP addresses, use the
+# my-lists/ip-blocklist.txt file instead. Both lists are merged automatically.
+2.189.5.142
+2.189.5.162
+13.95.133.245
+24.172.34.114
+36.255.84.69
+36.91.135.141
+36.95.142.35
+43.166.247.82
+45.66.35.22
+45.141.215.114
+45.227.195.121
+45.231.223.252
+77.111.245.13
+77.238.225.41
+80.85.245.5
+82.80.249.249
+84.55.46.74
+88.218.62.29
+102.68.128.195
+103.165.155.254
+103.169.254.9
+104.207.39.26
+109.202.99.46
+115.127.116.242
+138.68.86.32
+138.121.161.84
+146.70.14.30
+156.146.33.76
+161.49.215.28
+162.240.111.156
+162.240.233.90
+164.92.244.132
+167.99.55.197
+177.130.104.106
+179.43.188.122
+179.43.191.19
+182.44.2.148
+182.138.158.242
+185.177.72.50
+185.177.72.60
+185.220.101.37
+190.83.12.220
+190.94.212.198
+200.174.198.222
+201.77.128.158
+202.62.84.210
+213.232.87.230
+213.232.87.232
+213.232.87.234
+2a03:cfc0:8000:2e::9532:7428
+35.203.120.9
+185.177.72.13
+34.80.89.91`;
