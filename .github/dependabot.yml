@@ -1,0 +1,31 @@
+version: 2
+updates:
+  - package-ecosystem: pnpm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "08:00"
+    open-pull-requests-limit: 10
+    labels: [dependencies, pnpm]
+    commit-message:
+      prefix: "chore"
+      include: scope
+    groups:
+      cloudflare:
+        patterns: ["@cloudflare/*", "wrangler", "miniflare", "workerd"]
+        update-types: [minor, patch]
+      lint-release:
+        patterns: ["@commitlint/*", "semantic-release*"]
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      time: "08:00"
+    open-pull-requests-limit: 5
+    labels: [dependencies, github-actions]
+    commit-message:
+      prefix: "chore"
+      include: scope
