@@ -14,6 +14,10 @@
     "bundle": "tsx scripts/bundle.ts",
     "lint:commits": "commitlint --from=origin/main --to=HEAD --verbose"
   },
+  "packageManager": "pnpm@12.4.2",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.22.0",
     "@cloudflare/workers-types": "^5.20260916.1",
