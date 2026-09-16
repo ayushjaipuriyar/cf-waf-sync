@@ -21,6 +21,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm run check
+      - run: pnpm run lint:check
       - run: pnpm test
       - run: pnpm exec wrangler deploy --dry-run
       - name: bundle freshness

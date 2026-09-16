@@ -12,19 +12,27 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "bundle": "tsx scripts/bundle.ts",
-    "lint:commits": "commitlint --from=origin/main --to=HEAD --verbose"
+    "lint": "biome check --write ./src",
+    "lint:check": "biome ci ./src",
+    "lint:commits": "commitlint --from=origin/main --to=HEAD --verbose",
+    "setup": "tsx scripts/setup.ts",
+    "setup:bash": "bash scripts/setup.sh",
+    "setup:all": "bash scripts/setup.sh --prompt --create --kv --open",
+    "setup:branch": "tsx scripts/setup.ts --branch",
+    "prepare": "husky"
   },
   "packageManager": "pnpm@12.4.2",
   "engines": {
     "node": ">=22.0.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.5.14",
     "@cloudflare/vitest-pool-workers": "^0.22.0",
     "@cloudflare/workers-types": "^5.20260916.1",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
-    "@semantic-release/changelog": "^7.0.0",
     "@semantic-release/git": "^11.0.1",
+    "husky": "^9.1.7",
     "semantic-release": "^24.2.8",
     "tsx": "^4.23.13",
     "typescript": "^5.9.0",

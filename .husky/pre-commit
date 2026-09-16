@@ -1,0 +1,1 @@
+pnpm run check && pnpm exec biome ci ./src && pnpm test
