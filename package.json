@@ -23,6 +23,8 @@
     "@cloudflare/workers-types": "^5.20260916.1",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
+    "@semantic-release/changelog": "^7.0.0",
+    "@semantic-release/git": "^11.0.1",
     "semantic-release": "^24.2.8",
     "tsx": "^4.23.13",
     "typescript": "^5.9.0",
