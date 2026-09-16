@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci --legacy-peer-deps
+      - run: npm run check
+      - run: npm test
+      - run: npx wrangler deploy --dry-run
+      - name: bundle freshness
+        run: |
+          npm run bundle || echo "bundle failed (network optional)"
+          git diff --exit-code -- src/assets/bundled.ts || echo "::warning::bundled assets drift — run npm run bundle"
