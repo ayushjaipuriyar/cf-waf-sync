@@ -59,7 +59,9 @@ export function parseExpressionsText(raw: string, cfg: ResolvedConfig): Expressi
       cleaned = cleaned.replace(/\s+(?:or|and)\s*$/i, "");
       cleaned = cleaned.replace(/\s+(?:or|and)\s+(?:or|and)\s+/gi, " or ");
       cleaned = cleaned.trim();
-      if (!cleaned || cleaned === "or" || cleaned === "and") cleaned = "(true)";
+      // Guard: never emit "(true)" for a block action — that would block all traffic when PHP/WP filters strip the expression.
+      // Mark empty as "" so the block is dropped with a warning instead of becoming a block-all rule.
+      if (!cleaned || cleaned === "or" || cleaned === "and") cleaned = "";
     }
 
     return {
@@ -73,10 +75,19 @@ export function parseExpressionsText(raw: string, cfg: ResolvedConfig): Expressi
   if (!blocks.length) return null;
 
   const acc: any = {};
+  let droppedEmpty = 0;
   blocks.forEach((block, i) => {
-    if (!block.expressions) return;
+    if (!block.expressions || block.expressions.trim() === "" || block.expressions.trim() === "(true)") {
+      droppedEmpty++;
+      console.warn(`Dropped empty expression block ${i + 1} "${block.name}" after PHP/WP filtering — would have been block-all`);
+      return;
+    }
+    if (block.expressions.length > 4096) {
+      console.warn(`Block ${i + 1} "${block.name}" ${block.expressions.length} chars exceeds MAX 4096 — will error per zone`);
+    }
     acc[i + 1] = block;
   });
+  if (droppedEmpty) console.warn(`Dropped ${droppedEmpty} empty blocks — check PHP_SUPPORT/WORDPRESS_SUPPORT filters`);
 
   const versionMatch = text.match(/Last update:\s*([\d.]+)/i);
   acc._meta = {

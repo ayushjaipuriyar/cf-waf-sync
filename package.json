@@ -8,11 +8,21 @@
     "deploy": "wrangler deploy",
     "deploy:dry": "wrangler deploy --dry-run",
     "types": "wrangler types",
-    "check": "tsc --noEmit"
+    "check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "bundle": "tsx scripts/bundle.ts"
   },
   "devDependencies": {
-    "typescript": "^5.7.0",
-    "wrangler": "^4.127.1"
+    "@cloudflare/vitest-pool-workers": "^0.22.0",
+    "@cloudflare/workers-types": "^5.20260916.1",
+    "tsx": "^4.23.13",
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.4",
+    "wrangler": "^4.132.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "p-limit": "^6.2.0",
+    "zod": "^3.25.0"
+  }
 }

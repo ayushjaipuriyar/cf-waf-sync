@@ -88,7 +88,9 @@ async function waitForBulk(cfg: ResolvedConfig, operationId: string) {
     const error = (data.result as any).error;
     if (status === "completed") return;
     if (status === "failed") throw new Error(`Bulk operation failed: ${error || "unknown"}`);
-    await new Promise((r) => setTimeout(r, 2000));
+    // jittered backoff: 1.5-2.5s
+    const delay = 1500 + Math.random() * 1000;
+    await new Promise((r) => setTimeout(r, delay));
   }
   throw new Error(`Bulk operation ${operationId} did not complete in 60s`);
 }

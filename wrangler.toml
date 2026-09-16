@@ -3,6 +3,14 @@ main = "src/index.ts"
 compatibility_date = "2026-09-16"
 compatibility_flags = ["nodejs_compat"]
 
+# Optional KV for audit trail (lastSync). Create via:
+# npx wrangler kv namespace create SYNC_KV
+# then paste ids below and uncomment:
+# [[kv_namespaces]]
+# binding = "SYNC_KV"
+# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+# preview_id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
 [triggers]
 crons = ["0 9,15,18,22 * * *"]
 
