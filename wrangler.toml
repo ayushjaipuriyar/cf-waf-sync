@@ -16,7 +16,7 @@ crons = ["0 9,15,18,22 * * *"]
 
 [vars]
 CF_IP_BLOCKLIST_NAME = "sefinek_cf_waf"
-ALLOWLIST = 'http.host eq "media-cdn1.seabuddy.co"' # public CDN exempt for Part 2; set "" to disable
+ALLOWLIST = 'http.host eq "media-cdn1.seabuddy.co" or http.host eq "plane-slack.seabuddy.co" or http.host eq "auth.seabuddy.co"'
 PHP_SUPPORT = "false"
 WORDPRESS_SUPPORT = "false"
 SNIFFCAT_CONFIDENCE_MIN = "80"
