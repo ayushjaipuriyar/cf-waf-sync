@@ -24,9 +24,8 @@ SNIFFCAT_LIMIT = "2000"
 ABUSEIPDB_CONFIDENCE_MIN = "75"
 ABUSEIPDB_LIMIT = "8000"
 EXCLUDED_ZONES = ""
-# For zone-scoped cfut_... tokens (can't GET /zones), set explicit zone:
-# CF_ZONE_IDS = "0115c6fc4aab62dff1c8c1730b17cea9"
-# CF_ZONE_NAMES = "seabuddy.co"
+CF_ZONE_IDS = "0115c6fc4aab62dff1c8c1730b17cea9"
+CF_ZONE_NAMES = "seabuddy.co"
 
 # Secrets to set via `wrangler secret put`:
 # CF_API_TOKEN (Account API Token, cfat_...  with Zone:WAF:Edit + Account:Filter Lists:Edit)
